@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playpen+Sans:wght@100..800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <link rel="stylesheet" href="sy.css" />
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js"></script> 
+    
+
+    <style>
+      /* Styling for the button that opens the chatbot */
+      #open-chatbot {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 10px 15px;
+        font-size: 14px;
+        cursor: pointer;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+      }
+
+      /* Styling for the chatbot window iframe */
+      #chatbot-frame {
+        position: fixed;
+        bottom: 80px; /* Ensure it doesn't overlap the button */
+        right: 20px;
+        width: 320px;
+        height: 450px;
+        border: none;
+        display: none; /* Hidden initially */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        z-index: 999; /* Below the button */
+      }
+    </style>
+    <style>
+      /* General Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+      }
+
+      .modal-content {
+        background-color: white;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+      }
+
+      /* Close Button */
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      /* Register/Login Form Styles */
+      input[type=text],
+      input[type=password] {
+        width: 100%;
+        padding: 15px;
+        margin: 5px 0 22px 0;
+        display: inline-block;
+        border: none;
+        background: #f1f1f1;
+      }
+
+      input[type=text]:focus,
+      input[type=password]:focus {
+        background-color: #ddd;
+        outline: none;
+      }
+
+      .registerbtn,
+      .loginbtn {
+        background-color: #04aa6d;
+        color: white;
+        padding: 16px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        opacity: 0.9;
+      }
+
+      .registerbtn:hover,
+      .loginbtn:hover {
+        opacity: 1;
+      }
+
+      /* Style for the Sign-in section in modal */
+      .signin {
+        background-color: #f1f1f1;
+        text-align: center;
+      }
+      
+      html {
+        scroll-behavior: smooth;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <font face="" size="2" color="white"><marquee>Upto 70% Off  |  Free Shipping On All Orders Above 750 INR  |  COD Available (T&C Apply)</marquee></font>
+    </div>
+    <div class="navbar">
+      <div class="photo"><img src="image/logo3.png" alt="Logo" id="image1" /></div>
+      <div class="search-container">
+        <input type="text" id="mySearch" onkeyup="myFunction()" placeholder="Search.." title="Type in a category" />
+      </div>
+      <a href="#"><strong>Home</strong></a>
+      <div class="scroll" id="section1">
+        <a href="#section2"><strong>Category</strong></a>
+      </div>
+      <div class="dropdown">
+        <a href="women.html"><strong>Women</strong></a>
+        <div class="dropdown-content">
+          <a href="#">Hand Bags</a>
+          <a href="#">Sling</a>
+          <a href="#">Wallets</a>
+          <a href="#">Tote</a>
+          <a href="#">Laptop Bags</a>
+          <a href="#">Clutch</a>
+          <a href="#">Backpacks</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="men.html"><strong>Men</strong></a>
+        <div class="dropdown-content">
+          <a href="#">Brief case</a>
+          <a href="#">Laptop Bags</a>
+          <a href="#">Wallets</a>
+          <a href="#">Backpacks</a>
+          <a href="#">Gym Bags</a>
+        </div>
+      </div>
+      <a href="children.html"><strong>Children</strong></a>
+      <a href="luggage.html"><strong>Luggage</strong></a>
+      <a href="wishlist.html"><b>Wishlist</b></a>
+           <a href="cart.html"><strong>Cart</strong></a>
+      <a href="#" id="accountBtn"><strong>Register/Login</strong></a> <!-- Trigger Register Modal -->
+      </div>
+
+      
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('registerModal')">&times;</span>
+        <form action="register.php" method="post">
+          <h1>Register</h1>
+          <p>Please fill in this form to create an account.</p>
+          <hr>
+          <label for="username"><b>Username</b></label>
+          <input type="text" placeholder="Enter Username" name="username" required />
+
+          <label for="email"><b>Mobile no.</b></label>
+          <input type="text" placeholder="Enter Mobile Number" name="mobile" required />
+
+          <label for="psw"><b>Create Password</b></label>
+          <input type="password" placeholder="Enter Password" name="pwd" required />
+
+          <label for="psw-repeat"><b>Confirm Password</b></label>
+          <input type="password" placeholder="Repeat Password" name="pwd-repeat" required />
+          <hr />
+          <button type="submit" class="registerbtn">Register</button>
+        </form>
+        <div class="container signin">
+          <p>Already have an account? <a href="#" id="loginLink">Login</a>.</p> <!-- Link to Login Modal -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('loginModal')">&times;</span>
+        <form>
+          <h1>Login</h1>
+          <p>Please fill in this form to log into your account.</p>
+          <hr />
+          <label for="username"><b>Username</b></label>
+          <input type="text" placeholder="Enter Username" name="username" required />
+
+          <label for="psw"><b>Enter Password</b></label>
+          <input type="password" placeholder="Enter Password" name="psw" required />
+          <hr />
+          <label>
+            <input type="checkbox" checked="checked" name="remember" /> Remember me
+          </label>
+          <button type="submit" class="loginbtn">Login</button>
+        </form>
+      </div>
+    </div>
+    <div class="slider">
+        <div class="slides">
+          <div class="slide"><img src="img/Slider/1.jpg" alt="Slide 1" /></div>
+          <div class="slide"><img src="img/Slider/2.jpg" alt="Slide 2" /></div>
+          <div class="slide"><img src="img/Slider/3.jpg" alt="Slide 3" /></div>
+          <!-- Add more slides as needed -->
+        </div>
+        <div class="dot-container"></div>
+    </div>
+
+    <script>
+      // Open modals
+      document.getElementById('accountBtn').onclick = function () {
+        document.getElementById('registerModal').style.display = 'block';
+      };
+
+      document.getElementById('loginLink').onclick = function () {
+        closeModal('registerModal');
+        document.getElementById('loginModal').style.display = 'block';
+      };
+
+      // Close modal function
+      function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+      }
+
+      // Close modal when clicking outside of it
+      window.onclick = function (event) {
+        if (event.target.classList.contains('modal')) {
+          event.target.style.display = 'none';
+        }
+      };
+    </script>
+
+    <script>
+    let slideIndex = 0;
+  
+    function showSlides() {
+      const slides = document.querySelector('.slides');
+      const totalSlides = slides.children.length;
+  
+      // Move to the next slide
+      slideIndex = (slideIndex + 1) % totalSlides;
+  
+      // Apply the slide transition
+      slides.style.transform = `translateX(-${slideIndex * 100}%)`;
+  
+      // Update the dots
+      const dots = document.querySelectorAll('.dot');
+      dots.forEach(dot => dot.classList.remove('active'));
+      if (dots[slideIndex]) {
+        dots[slideIndex].classList.add('active');
+      }
+  
+      setTimeout(showSlides, 3000); // Change slide every 3 seconds
+    }
+  
+    // Initialize the slider
+    document.addEventListener('DOMContentLoaded', () => {
+      // Create dots based on the number of slides
+      const totalSlides = document.querySelector('.slides').children.length;
+      const dotContainer = document.querySelector('.dot-container');
+  
+      for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('span');
+        dot.className = 'dot';
+        dotContainer.appendChild(dot);
+      }
+  
+      showSlides();
+    });
+  </script>
+
+  <!-- Discount Banner -->
+<div class="discount-banner">
+  <div class="discount-content">
+    <img src="image/1logo2.png" alt="Discount Logo" class="discount-logo" />
+    <div class="discount-text">
+      <h2>Extra 20% Off On Your First Purchase!</h2>
+      <p>Use Code: <strong>EXTRA20%</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- Brand Cards Section -->
+<div class="brand-cards-section">
+  <h2>Explore Our Top Brands</h2>
+  <div class="brand-cards">
+    <!-- Brand Card 1 -->
+    <div class="brand-card">
+      <img src="img/luggage/trekking bags/tb2.jpg" alt="Skybags" />
+      <h3>Skybags</h3>
+      <p>Discover the latest collection of Skybags</p>
+      <button class="shop-btn">Shop Now</button>
+    </div>
+    <!-- Brand Card 2 -->
+    <div class="brand-card">
+      <img src="img/luggage/Trolley bags/tb1.jpg" alt="VIP bags" />
+      <h3>VIP bags</h3>
+      <p>Explore the exclusive range of VIP bags</p>
+      <button class="shop-btn">Shop Now</button>
+    </div>
+    <!-- Brand Card 3 -->
+    <div class="brand-card">
+      <img src="img/Women/Handbags/hb1.jpg" alt="American Tourister" />
+      <h3>Gucci</h3>
+      <p>Check out the premium products from Gucci</p>
+      <button class="shop-btn">Shop Now</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="scroll" id="section2">
+  <div class="category-heading" id="section2">
+    <img src="image/category2.png" alt="category img" class="category-img"/>
+  </div>   
+</div>  
+  <!-- Circular Icons Section -->
+<div class="icon-container">
+  <div class="icon" onclick="window.location.href='#'">
+    <i class="fas fa-tags"></i>
+    <p>Brand</p>
+  </div>
+  <div class="icon" onclick="window.location.href='#'">
+    <i class="fas fa-dollar-sign"></i>
+    <p>Price</p>
+  </div>
+  <div class="icon" onclick="window.location.href='#'">
+    <i class="fas fa-cubes"></i>
+    <p>Material</p>
+  </div>
+  <div class="icon" onclick="window.location.href='#'">
+    <i class="fas fa-palette"></i>
+    <p>Color</p>
+  </div>
+  <div class="icon" onclick="window.location.href='#'">
+    <i class="fas fa-gift"></i>
+    <p>Occasions</p>
+  </div>
+</div>
+
+<div class="product-container">
+  <div class="product-card" data-brand="Gucci" data-price="1500" data-material="Leather" data-color="Black" data-occasion="Formal" data-image="img/Women/Backpacks/bp1.png">
+    <img src="img/Women/Backpacks/bp1.png" alt="Backpack" />
+    <h3>Backpack</h3>
+    <h6>Price: ₹1500</h6>
+    <h6>Brand: Gucci</h6>
+    <h6>Material: Leather</h6>
+    <h6>Color: Black</h6>
+    <h6>Occasion: Formal</h6>
+    <button class="add-to-cart-btn">Add to cart</button>
+  </div>
+  <div class="product-card" data-brand="Gucci" data-price="1500" data-material="Leather" data-color="Black" data-occasion="Formal" data-image="img/Women/Clutch/c1.png">
+    <img src="img/Women/Clutch/c1.png" alt="Clutch" />
+    <h3>Clutch</h3>
+    <h6>Price: ₹1500</h6>
+    <h6>Brand: Gucci</h6>
+    <h6>Material: Leather<h6>
+    <h6>Color: Black</h6>
+    <h6>Occasion: Formal</h6>
+    <button class="add-to-cart-btn">Add to cart</button>
+  </div>
+  <div class="product-card" data-brand="Skybags" data-price="2500" data-material="Fabric" data-color="Red" data-occasion="Casual" data-image="img/luggage/Trolley bags/tb1.jpg">
+    <img src="img/luggage/Trolley bags/tb1.jpg" alt="Trolley bag" />
+    <h3>Trolley bag</h3>
+    <h6>Price: ₹2500</h6>
+    <h6>Brand: Skybags</h6>
+    <h6>Material: Fabric</h6>
+    <h6>Color: Red</h6>
+    <h6>Occasion: Casual</h6>
+    <button class="add-to-cart-btn">Add to cart</button>
+  </div>
+  <div class="product-card" data-brand="Skybags" data-price="2500" data-material="Fabric" data-color="Red" data-occasion="Casual" data-image="img/Men/Backpacks/bp1.png">
+    <img src="img/Men/Backpacks/bp1.png" alt="Backpack" />
+    <h3>Men Backpack</h3>
+    <h6>Price: ₹2500</h6>
+    <h6>Brand: Skybags</h6>
+    <h6>Material: Fabric</h6>
+    <h6>Color: Red</h6>
+    <h6>Occasion: Casual</h6>
+    <button class="add-to-cart-btn">Add to cart</button>
+  </div>
+  <!-- Add more product cards as needed -->
+</div>
+<div class="product-container">
+  <div class="product-card" data-brand="Skybags" data-price="1500" data-material="Leather" data-color="Black" data-occasion="Formal" data-image="img/Men/briefcase/bc1.jpg">
+    <img src="img/Men/briefcase/bc1.jpg" alt="Briefcase" />
+    <h3>Briefcase</h3>
+    <h6>Price: ₹1500</h6>
+    <h6>Brand: Skybags</h6>
+    <h6>Material: Leather</h6>
+    <h6>Color: Black</h6>
+    <h6>Occasion: Formal</h6>
+    <button class="add-to-cart-btn">Add to cart</button>
+  </div>
+  <div class="product-card" data-brand="Gucci" data-price="1500" data-material="Leather" data-color="Black" data-occasion="Formal" data-image="img/Men/Wallets/w1.png">
+    <img src="img/Men/Wallets/w1.png" alt="Wallet" />
+    <h3>wallet</h3>
+    <h6>Price: ₹1500</h6>
+    <h6>Brand: Gucci</h6>
+    <h6>Material: Leather</h6>
+    <h6>Color: Black</h6>
+    <h6>Occasion: Formal</h6>
+    <button class="add-to-cart-btn">Add to cart</button>
+  </div>
+  <div class="product-card" data-brand="Skybags" data-price="2500" data-material="Fabric" data-color="Red" data-occasion="Casual" data-image="img/luggage/Duffel Bags/db1.jpg">
+    <img src="img/luggage/Duffel Bags/db1.jpg" alt="Duffel bag" />
+    <h3>Duffle bag</h3>
+    <h6>Price: ₹2500</h6>
+    <h6>Brand: Skybags</h6>
+    <h6>Material: Fabric</h6>
+    <h6>Color: Red</h6>
+    <h6>Occasion: Casual</h6>
+    <button class="add-to-cart-btn">Add to cart</button>
+  </div>
+  <div class="product-card" data-brand="Skybags" data-price="2500" data-material="Fabric" data-color="Red" data-occasion="Casual" data-image="img/luggage/Duffel Bags/db1.jpg">
+    <img src="img/luggage/Duffel Bags/db1.jpg" alt="Duffel bag" />
+    <h3>duffel bag</h3>
+    <h6>Price: ₹2500</h6>
+    <h6>Brand: Skybags</h6>
+    <h6>Material: Fabric</h6>
+    <h6>Color: Red</h6>
+    <h6>Occasion: Casual</h6>
+    <button class="add-to-cart-btn">Add to cart</button>
+  </div>
+  <!-- Add more product cards as needed -->
+</div>
+<div class="product-container">
+  <div class="product-card" data-brand="Skybags" data-price="1500" data-material="Leather" data-color="Black" data-occasion="Formal" data-image="img/Children/school bags/sb1.jpg">
+    <img src="img/Children/school bags/sb1.jpg" alt="School bag" />
+    <h3>School bag</h3>
+    <h6>Price: ₹1500</h6>
+    <h6>Brand: Skyabags</h6>
+    <h6>Material: Leather</h6>
+    <h6>Color: Black</h6>
+    <h6>Occasion: Formal</ph6>
+      <button class="add-to-cart-btn">Add to cart</button>
+  </div>
+  <div class="product-card" data-brand="Gucci" data-price="1500" data-material="Leather" data-color="Black" data-occasion="Formal" data-image="img/Men/Wallets/w3.png">
+    <img src="img/Men/Wallets/w3.png" alt="Wallet" />
+    <h3>Wallet</h3>
+    <h6>Price: ₹1500</h6>
+    <h6>Brand: Gucci</h6>
+    <h6>Material: Leather</h6>
+    <h6>Color: Black</h6>
+    <h6>Occasion: Formal</h6>
+    <button class="add-to-cart-btn">Add to cart</button>
+  </div>
+  <div class="product-card" data-brand="Skybags" data-price="2500" data-material="Fabric" data-color="Red" data-occasion="Casual" data-image="img/Children/school bags/sb2.jpg">
+    <img src="img/Children/school bags/sb2.jpg" alt="School bags" />
+    <h3>Product 2</h3>
+    <h6>Price: ₹2500</h6>
+    <h6>Brand: Skybags</h6>
+    <h6>Material: Fabric</h6>
+    <h6>Color: Red</h6>
+    <h6>Occasion: Casual</h6>
+    <button class="add-to-cart-btn">Add to cart</button>
+  </div>
+  <div class="product-card" data-brand="Skybags" data-price="2500" data-material="Fabric" data-color="Red" data-occasion="Casual" data-image="img/luggage/Trolley bags/tb2.jpg">
+    <img src="img/luggage/Trolley bags/tb2.jpg" alt="Trolley bags" />
+    <h3>Product 2</h3>
+    <h6>Price: ₹2500</h6>
+    <h6>Brand: Skybags</h6>
+    <h6>Material: Fabric</h6>
+    <h6>Color: Red</h6>
+    <h6>Occasion: Casual</h6>
+    <button class="add-to-cart-btn">Add to cart</button>
+  </div>
+  <!-- Add more product cards as needed -->
+</div>
+<div class="product-container">
+  <div class="product-card" data-brand="Gucci" data-price="1500" data-material="Leather" data-color="Black" data-occasion="Formal" data-image="img/Women/Handbags/hb4.jpg">
+    <img src="img/Women/Handbags/hb4.jpg" alt="Handbags" />
+    <h3>Product 1</h3>
+    <h6>Price: ₹1500</h6>
+    <h6>Brand: Gucci</h6>
+    <h6>Material: Leather</h6>
+    <h6>Color: Black</h6>
+    <h6>Occasion: Formal</h6>
+    <button class="add-to-cart-btn">Add to cart</button>
+  </div>
+  <div class="product-card" data-brand="Skybags" data-price="1500" data-material="Leather" data-color="Black" data-occasion="Formal" data-image="img/luggage/Trolley bags/tb3.jpg">
+    <img src="img/luggage/Trolley bags/tb3.jpg" alt="Trolly bag" />
+    <h3>Product 1</h3>
+    <h6>Price: ₹1500</h6>
+    <h6>Brand: Skybags</h6>
+    <h6>Material: Leather</h6>
+    <h6>Color: Black</h6>
+    <h6>Occasion: Formal</h6>
+    <button class="add-to-cart-btn">Add to cart</button>
+  </div>
+  <div class="product-card" data-brand="Skybags" data-price="2500" data-material="Fabric" data-color="Red" data-occasion="Casual" data-image="img/Women/Laptop Bags/lb2.png">
+    <img src="img/Women/Laptop Bags/lb2.png" alt="Laptop bag" />
+    <h3>Product 2</h3>
+    <h6>Price: ₹2500</h6>
+    <h6>Brand: Skybags</h6>
+    <h6>Material: Fabric</h6>
+    <h6>Color: Red</h6>
+    <h6>Occasion: Casual</h6>
+    <button class="add-to-cart-btn">Add to cart</button>
+  </div>
+  <div class="product-card" data-brand="Skybags" data-price="2500" data-material="Fabric" data-color="Red" data-occasion="Casual" data-image="img/Women/Tote bags/t2.png">
+    <img src="img/Women/Tote bags/t2.png" alt="Tote bag" />
+    <h3>Product 2</h3>
+    <h6>Price: ₹2500</h6>
+    <h6>Brand: Skybags</h6>
+    <h6>Material: Fabric</h6>
+    <h6>Color: Red</h6>
+    <h6>Occasion: Casual</h6>
+    <button class="add-to-cart-btn">Add to cart</button>
+  </div>
+  <!-- Add more product cards as needed -->
+</div>
+
+<script>
+  document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+  button.addEventListener('click', function() {
+    // Get the parent product card
+    const productCard = this.parentElement;
+
+    // Extract product data from data attributes
+    const product = {
+      image: productCard.dataset.image,
+      title: productCard.querySelector('h3').innerText,
+      price: productCard.dataset.price,
+      brand: productCard.dataset.brand,
+      material: productCard.dataset.material,
+      color: productCard.dataset.color,
+      occasion: productCard.dataset.occasion
+    };
+
+    // Get the existing cart data from localStorage (or create a new one if it doesn't exist)
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    // Add the selected product to the cart
+    cart.push(product);
+
+    // Save the updated cart back to localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+    // Notify the user
+    alert(`${product.title} has been added to your cart!`);
+  });
+});
+
+</script>
+
+<script>
+  function filterProducts(category, value) {
+  const cards = document.querySelectorAll('.product-card');
+  
+  // Loop through each card
+  cards.forEach(card => {
+    // Get the card's data attribute based on the selected category
+    const cardValue = card.getAttribute(`data-${category}`);
+    
+    // If the card matches the filter, show it, otherwise hide it
+    if (cardValue === value || value === 'all') {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+  // Function to filter products
+function filterProducts(category, value) {
+  const cards = document.querySelectorAll('.product-card');
+  
+  // Loop through each card
+  cards.forEach(card => {
+    // Get the card's data attribute based on the selected category
+    const cardValue = card.getAttribute(`data-${category}`);
+    
+    // If the card matches the filter, show it, otherwise hide it
+    if (cardValue === value || value === 'all') {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+// Add event listeners to the category buttons (Brand, Price, Material, etc.)
+ document.querySelectorAll('.icon').forEach(icon => {
+  icon.addEventListener('click', function() {
+    const category = this.querySelector('p').textContent.toLowerCase();
+    
+    let value = ''; // Value can be set dynamically based on user input or predefined options.
+    
+    // Show all cards by default when no filter is applied
+    if (category === 'brand') {
+      value = prompt('Enter the Brand (Gucci, Skybags)');
+    } else if (category === 'price') {
+      value = prompt('Enter the Price (below 1500, above 1500)');
+    } else if (category === 'material') {
+      value = prompt('Enter the Material (Leather, Fabric)');
+    } else if (category === 'color') {
+      value = prompt('Enter the Color (Black, Red)');
+    } else if (category === 'occasion') {
+      value = prompt('Enter the Occasion (Formal, Casual)');
+    }
+    
+    filterProducts(category, value);
+  });
+});
+
+</script>
+
+
+<script>
+  // Function to toggle the chatbot window visibility
+  function toggleChatbot() {
+    const chatbotWindow = document.getElementById("chatbot-window");
+    
+    // Toggle the visibility by adding/removing the "chatbot-visible" class
+    if (chatbotWindow.classList.contains("chatbot-visible")) {
+      chatbotWindow.classList.remove("chatbot-visible");
+      chatbotWindow.classList.add("chatbot-hidden");
+    } else {
+      chatbotWindow.classList.remove("chatbot-hidden");
+      chatbotWindow.classList.add("chatbot-visible");
+    }
+  }
+
+  // Function to initialize chatbot with a greeting and contact message
+  function initChatbot() {
+    const greetingMessage = "Hi! How can I help you today?";
+    const contactMessage = "Do you have any query? Connect to an assistant at +1234567890."; // Example number
+    
+    displayMessage(greetingMessage, "bot-message");
+
+    // Add contact number message after a delay of 2 seconds
+    setTimeout(() => displayMessage(contactMessage, "bot-message"), 2000);
+  }
+
+  // Function to send the user's message and get a bot response
+  function sendMessage() {
+    const userInput = document.getElementById("user-input").value.toLowerCase().trim();
+    
+    // Check if input is not empty
+    if (userInput) {
+      // Display the user's message
+      displayMessage(userInput, "user-message");
+
+      // Get a response from the bot
+      const botResponse = responses[userInput] || responses["default"];
+      
+      // Display the bot's response
+      setTimeout(() => displayMessage(botResponse, "bot-message"), 500);
+
+      // Clear the input field
+      document.getElementById("user-input").value = "";
+    }
+  }
+
+  // Function to display the message in the chat window
+  function displayMessage(message, className) {
+    const chatMessages = document.getElementById("chat-messages");
+    const newMessage = document.createElement("p");
+    newMessage.classList.add(className);
+    newMessage.textContent = message;
+
+    chatMessages.appendChild(newMessage);
+    chatMessages.scrollTop = chatMessages.scrollHeight;  // Scroll to the bottom
+  }
+
+  // Initialize the chatbot with greeting and contact message on page load
+  window.onload = function() {
+    initChatbot();
+  }
+
+</script>
+
+<footer>
+  <div class="footer-container">
+    <div class="footer-section">
+      <h3>BAGBUZZ</h3>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Editorial</a></li>
+        <li><a href="#">Bagbuzz Muse</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h3>S H O P</h3>
+      <ul>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Returns & Refunds</a></li>
+        <li><a href="#">FAQs</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h3>CUSTOMER CARE</h3>
+      <ul>
+        <li><a href="#">Orders</a></li>
+        <li><a href="#">Payment</a></li>
+        <li><a href="#">Delivery</a></li>
+        <li><a href="#">Promotions</a></li>
+        <li><a href="#">Track My Order</a></li>
+        <li><a href="#">Returns and Exchanges</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section connect-section">
+      <h3>CONNECT</h3>
+      <div class="social-icons">
+        <a href="#"><img src="image/whatsapp-icon.png" alt="WhatsApp"></a>
+        <a href="#"><img src="image/instagram-icon.png" alt="Instagram"></a>
+        <a href="#"><img src="image/youtube-icon.png" alt="YouTube"></a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2024 BAGBUZZ</p>
+    <p>Developed by Hemal, Anusha, Cherlin</p>
+  </div>
+</footer>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Main Website with Chatbot</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      /* Styling for the circular chat icon button */
+      #open-chatbot {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px; /* Width of the button */
+        height: 60px; /* Height of the button */
+        border: none;
+        border-radius: 50%; /* Makes the button circular */
+        background-color: #007BFF; /* Color of the button */
+        color: white;
+        font-size: 24px; /* Font size for the icon */
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1000; /* Ensures it stays above other elements */
+        display: flex; /* Centers the icon */
+        align-items: center; /* Centers vertically */
+        justify-content: center; /* Centers horizontally */
+      }
+
+      /* Styling for the chatbot window iframe */
+      #chatbot-frame {
+        position: fixed;
+        bottom: 80px; /* Ensure it doesn't overlap the button */
+        right: 20px;
+        width: 380px; /* Increased width */
+        height: 540px; /* Increased height */
+        border: none;
+        display: none; /* Hidden initially */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        z-index: 999; /* Below the button */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Main website content -->
+    <div id="main-content">
+      <h1>Welcome to My Website</h1>
+      <p>Explore our content and feel free to ask any questions using our chatbot.</p>
+    </div>
+
+    <!-- Circular chat icon button to open the chatbot -->
+    <button id="open-chatbot">
+      <span>💬</span> <!-- Chat icon -->
+    </button>
+
+    <!-- Chatbot iframe (hidden by default) -->
+    <iframe
+      id="chatbot-frame"
+      src="public/index.html">
+    </iframe>
+
+    <!-- Inline JavaScript for chatbot functionality -->
+    <script>
+      document.getElementById('open-chatbot').addEventListener('click', function() {
+        const chatbotFrame = document.getElementById('chatbot-frame');
+        
+        // Toggle visibility of the iframe
+        if (chatbotFrame.style.display === 'none' || chatbotFrame.style.display === '') {
+          chatbotFrame.style.display = 'block';  // Show chatbot
+        } else {
+          chatbotFrame.style.display = 'none';   // Hide chatbot
+        }
+      });
+    </script>
+  </body>
+</html>
+
+
+    <script src="script.js"></script>
+  </body>
+</html>
+
+
+  </body>
+</html>

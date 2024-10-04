@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playpen+Sans:wght@100..800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="sy.css" />
+
+    <title>Your Cart</title>
+    <style>
+      /* Style for the product card */
+      .product-card {
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        position: relative; /* Allows for positioning the cross button */
+        max-width: 300px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for effect */
+        background-color: #fff;
+      }
+
+      .product-card img {
+        max-width: 100px;
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      /* Cross button (to remove products from cart) */
+      .remove-btn {
+        position: absolute;
+        top: 5px; /* Positioned at the top-right */
+        left: 90px;
+        background-color: transparent;
+        border: none;
+        font-size: 15px;
+        color: red;
+        cursor: pointer;
+        padding: 0px;
+        z-index: 10; /* Ensure the button is on top */
+      }
+
+      /* Ensures the button appears clearly */
+      .remove-btn:hover {
+        color: darkred;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <font face="" size="2" color="white"
+        >Upto 70% Off | Free Shipping On All Orders Above 750 INR | COD
+        Available (T&C Apply)</font
+      >
+    </div>
+
+    <div class="navbar">
+      <div class="photo">
+        <img src="image/logo.png" alt="Logo" id="image1" />
+      </div>
+      <div class="search-container">
+        <input
+          type="text"
+          id="mySearch"
+          onkeyup="myFunction()"
+          placeholder="Search.."
+          title="Type in a category"
+        />
+      </div>
+      <a href="hey.html"><strong>Home</strong></a>
+      <div class="scroll" id="section1">
+        <a href="#section2"><strong>Category</strong></a>
+      </div>
+      <div class="dropdown">
+        <a href="women.html"><strong>Women</strong></a>
+        <div class="dropdown-content">
+          <a href="#">Hand Bags</a>
+          <a href="#">Sling</a>
+          <a href="#">Wallets</a>
+          <a href="#">Tote</a>
+          <a href="#">Laptop Bags</a>
+          <a href="#">Clutch</a>
+          <a href="#">Backpacks</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="men.html"><strong>Men</strong></a>
+        <div class="dropdown-content">
+          <a href="#">Brief case</a>
+          <a href="#">Laptop Bags</a>
+          <a href="#">Wallets</a>
+          <a href="#">Backpacks</a>
+          <a href="#">Gym Bags</a>
+        </div>
+      </div>
+      <a href="children.html"><strong>Children</strong></a>
+      <a href="luggage.html"><strong>Luggage</strong></a>
+      <a href="wishlist.html"><strong>Wishlist</strong></a>
+      <a href="cart.html"><strong>Cart</strong></a>
+      <a href="#" id="accountBtn"><strong>Register/Login</strong></a>
+      <!-- Trigger Register Modal -->
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('registerModal')">&times;</span>
+        <form>
+          <h1>Register</h1>
+          <p>Please fill in this form to create an account.</p>
+          <hr />
+          <label for="username"><b>Username</b></label>
+          <input
+            type="text"
+            placeholder="Enter Username"
+            name="username"
+            required
+          />
+
+          <label for="email"><b>Mobile no.</b></label>
+          <input
+            type="text"
+            placeholder="Enter Mobile Number"
+            name="email"
+            required
+          />
+
+          <label for="psw"><b>Create Password</b></label>
+          <input
+            type="password"
+            placeholder="Enter Password"
+            name="psw"
+            required
+          />
+
+          <label for="psw-repeat"><b>Confirm Password</b></label>
+          <input
+            type="password"
+            placeholder="Repeat Password"
+            name="psw-repeat"
+            required
+          />
+          <hr />
+          <button type="submit" class="registerbtn">Register</button>
+        </form>
+        <div class="container signin">
+          <p>Already have an account? <a href="#" id="loginLink">Login</a>.</p>
+          <!-- Link to Login Modal -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('loginModal')">&times;</span>
+        <form>
+          <h1>Login</h1>
+          <p>Please fill in this form to log into your account.</p>
+          <hr />
+          <label for="username"><b>Username</b></label>
+          <input
+            type="text"
+            placeholder="Enter Username"
+            name="username"
+            required
+          />
+
+          <label for="psw"><b>Enter Password</b></label>
+          <input
+            type="password"
+            placeholder="Enter Password"
+            name="psw"
+            required
+          />
+          <hr />
+          <label>
+            <input type="checkbox" checked="checked" name="remember" /> Remember
+            me
+          </label>
+          <button type="submit" class="loginbtn">Login</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      // Open modals
+      document.getElementById("accountBtn").onclick = function () {
+        document.getElementById("registerModal").style.display = "block";
+      };
+
+      document.getElementById("loginLink").onclick = function () {
+        closeModal("registerModal");
+        document.getElementById("loginModal").style.display = "block";
+      };
+
+      // Close modal function
+      function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+      }
+
+      // Close modal when clicking outside of it
+      window.onclick = function (event) {
+        if (event.target.classList.contains("modal")) {
+          event.target.style.display = "none";
+        }
+      };
+    </script>
+
+    <div class="category-heading" id="section2">
+      <img src="image/cart.png" alt="Your cart img" class="category-img" />
+    </div>
+
+    <div id="cart-container"></div>
+
+    <script>
+      // Retrieve cart from localStorage
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      // Reference to the cart container where products will be displayed
+      const cartContainer = document.getElementById("cart-container");
+
+      // Function to display cart items
+      function displayCart() {
+        // Clear cart container to prevent duplicates
+        cartContainer.innerHTML = "";
+
+        if (cart.length === 0) {
+          cartContainer.innerHTML = "<b><p><center>Your cart is empty.</p></b>";
+        } else {
+          cart.forEach((product, index) => {
+            // Create product card with a remove button (cross button)
+            const productCard = `
+            <div class="product-card">
+              <button class="remove-btn" data-index="${index}">✖</button>
+              <img src="${product.image}" alt="${product.title}">
+              <h3>${product.title}</h3>
+              <h6>Price: ₹${product.price}</h6>
+              <h6>Brand: ${product.brand}</h6>
+              <h6>Material: ${product.material}</h6>
+              <h6>Color: ${product.color}</h6>
+              <h6>Occasion: ${product.occasion}</h6>
+            </div>
+          `;
+            cartContainer.innerHTML += productCard;
+          });
+
+          // Attach click event to remove buttons
+          document.querySelectorAll(".remove-btn").forEach((button) => {
+            button.addEventListener("click", function () {
+              const productIndex = this.dataset.index;
+              removeProductFromCart(productIndex);
+            });
+          });
+        }
+      }
+
+      // Function to remove a product from cart
+      function removeProductFromCart(index) {
+        // Remove the product from the cart array
+        cart.splice(index, 1);
+
+        // Update localStorage
+        localStorage.setItem("cart", JSON.stringify(cart));
+
+        // Refresh the cart display
+        displayCart();
+      }
+
+      // Display cart items on page load
+      displayCart();
+    </script>
+  </body>
+</html>

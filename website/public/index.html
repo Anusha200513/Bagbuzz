@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BagBuzz Chatbot</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="chatbot">
+      <div id="chat-messages"></div>
+
+      <div id="input-container">
+        <!-- Popup buttons -->
+        <div id="popup-buttons">
+          <button class="popup-button" data-option="product-info">
+            Product Information
+          </button>
+          <button class="popup-button" data-option="order-tracking">
+            Order Tracking
+          </button>
+          <button class="popup-button" data-option="customer-support">
+            Customer Support
+          </button>
+        </div>
+
+        <!-- Input and send button -->
+        <div id="input-area">
+          <input
+            type="text"
+            id="message-input"
+            placeholder="Type your message..."
+          />
+          <button id="send-button">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
